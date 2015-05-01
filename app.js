@@ -1,12 +1,33 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+/***
+    Primary App file
+    ----------------
+    Author: Mike Elsmore <mike@elsmore.me> @ukmadlz
+***/
 
+'use strict';
+
+// Config
+var config = require('./config.js');
+
+// Packages in use
+var express       = require('express');
+var path          = require('path');
+var favicon       = require('serve-favicon');
+var logger        = require('morgan');
+var cookieParser  = require('cookie-parser');
+var bodyParser    = require('body-parser');
+var cookieSession = require('cookie-session');
+var passport      = require('passport');
+var utils         = require('./lib/utils');
+
+// Libs
+var talkDb  = require(__dirname + '/lib/talk')(config.eventDB);
+
+// routes
 var routes = require('./routes/index');
-var users = require('./routes/users');
+var users  = require('./routes/users');
+var talks  = require('./routes/talks');
+var auth   = require('./routes/auth');
 
 var app = express();
 
@@ -19,17 +40,64 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieParser(config.session.secret));
+app.use(cookieSession({secret: config.session.secret}));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(passport.initialize());
+app.use(passport.session());
+
+//
+// A bit of middleware
+//
+
+// Check is user is logged in
+app.use(function(req, res, next) {
+  req.loggedIn = req.isAuthenticated() || false;
+  next();
+});
+
+// Apply items used in all views
+app.use(function(req, res, next) {
+  var _render = res.render;
+  res.render = function(view, options, fn) {
+    if (!options) var options = {};
+    options.user = req.user;
+    options.loggedIn = req.loggedIn;
+
+    options.offline = false;
+    if (app.get('env') === 'development') {
+      options.offline = true;
+    }
+
+    _render.call(this, view, options, fn);
+  }
+
+  next();
+});
+
+// Load in any CFP settings
+app.use(function(req, res, next) {
+  talkDb.get('settings', function(err, body) {
+    delete body._id;
+    delete body._rev;
+    delete body.type;
+    req.cfpSettings = body || {};
+    next();
+  });
+});
+
+// Implement routes
 app.use('/', routes);
-app.use('/users', users);
+app.use('/auth', auth);
+app.use('/user', utils.ensureAuthenticated, users);
+app.use('/talk', utils.ensureAuthenticated, talks);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
 
 // error handlers
@@ -37,24 +105,23 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-    app.use(function(err, req, res, next) {
-        res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
+  app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    res.render('error', {
+      message: err.message,
+      error: err
     });
+  });
 }
 
 // production error handler
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {}
-    });
+  res.status(err.status || 500);
+  res.render('error', {
+    message: err.message,
+    error: {}
+  });
 });
-
 
 module.exports = app;

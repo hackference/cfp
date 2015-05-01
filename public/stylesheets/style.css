@@ -1,8 +1,77 @@
+/*
+  General styles
+ */
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  min-height: 2000px;
+  padding-top: 70px;
 }
 
-a {
-  color: #00B7FF;
+/*
+  Additional Buttons
+ */
+/* Match GitHubs styling */
+.btn-github {
+  color: #FFFFFF;
+  background-color: #333333;
+  border-color: #1A1A1A;
+}
+.btn-github:hover,
+.btn-github:focus,
+.btn-github:active {
+  color: #FFFFFF;
+  background-color: #1a1a1a;
+  border-color: #000000;
+  background-image:none;
+}
+/* Match Twitters styling */
+.btn-twitter {
+  color: #FFFFFF;
+  background-color: #53ABEE;
+  border-color: #2594E9;
+}
+.btn-twitter:hover,
+.btn-twitter:focus,
+.btn-twitter:active {
+  color: #FFFFFF;
+  background-color: #2594e9;
+  border-color: #1374be;
+  background-image:none;
+}
+/* Match BitBucket styling */
+.btn-bitbucket {
+  color: #FFFFFF;
+  background-color: #205081;
+  border-color: #2594E9;
+}
+.btn-bitbucket:hover,
+.btn-bitbucket:focus,
+.btn-bitbucket:active {
+  color: #FFFFFF;
+  background-color: #3572b0;
+  border-color: #1374be;
+  background-image:none;
+}
+/* Match Google styling */
+.btn-google {
+  color: #FFFFFF;
+  background-color: #C50202;
+  border-color: #C50202;
+}
+.btn-google:hover,
+.btn-google:focus,
+.btn-google:active {
+  color: #FFFFFF;
+  background-color: #930101;
+  border-color: #6F0101;
+  background-image:none;
+}
+
+/* Avatar Images */
+.avatar-source {
+  position: absolute;
+}
+
+.pointer {
+  cursor: pointer;
+  margin-right: 5px;
 }
