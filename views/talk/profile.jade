@@ -1,0 +1,12 @@
+extends ../layout
+
+block content
+  .row
+    .col-md-6
+      h1.text-left #{talk.talk.title}
+      a.btn.btn-default(href='/talk/#{talk._id}/edit')
+          i.fa.fa-edit
+      p #{talk.talk.abstract}
+      if talk.talk.extra
+        h3 More Info
+        p #{talk.talk.extra}

@@ -1,0 +1,26 @@
+{
+  "name": "callforpapers",
+  "version": "0.1.0",
+  "directory": "./public/components/",
+  "authors": [
+    "Mike Elsmore <mike.elsmore@uk.ibm.com>"
+  ],
+  "description": "Apo to handle CFP for Hackference\"",
+  "moduleType": [
+    "node"
+  ],
+  "license": "Apache 2",
+  "homepage": "http://cfp.hackference.co.uk",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.4",
+    "jquery": "~2.1.3",
+    "font-awesome": "~4.3.0"
+  }
+}

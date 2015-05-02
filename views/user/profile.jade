@@ -1,0 +1,49 @@
+extends ../layout
+
+block content
+  .row
+    .col-md-8.col-md-offset-2
+      form(method="post")
+        .form-group
+          label(for="user-name") Name
+          input.form-control#user-name(type="text", name="name", placeholder="Name", required, value=user.name)
+        .form-group
+          label(for="user-email") E-mail
+          input.form-control#user-email(type="email", name="email", placeholder="E-mail", required, value=user.email)
+        .form-group
+          label(for="user-company") Company
+          input.form-control#user-company(type="text", name="company", placeholder="Company", value=user.company)
+        .form-group
+          label(for="user-position") Position / Job
+          input.form-control#user-position(type="text", name="position", placeholder="Position", required, value=user.position)
+        .form-group
+          label(for="user-twitter") 
+            i.fa.fa-twitter
+            |  Twitter
+          .input-group
+            .input-group-addon @
+            input.form-control#user-twitter(type="text", name="twitter", placeholder="Twitter", value=user.twitter)
+        .form-group
+          label(for="user-github") 
+            i.fa.fa-github
+            |  GitHub
+          input.form-control#user-github(type="text", name="github", placeholder="GitHub", value=user.github)
+        .form-group
+          label(for="user-experience") Speaking Experience
+          select.form-control#user-experience(name="experience")
+            for type in experienceTypes
+              - var select=null; if (type.value == user.experience) select='selected';
+              option(value=type.value, selected=select)= type.name
+        .form-group
+          label(for="user-bio") Bio
+          textarea.form-control#user-bio(name="bio", placeholder="Bio", required) #{user.bio}
+        .form-inline
+          for image in possibleAvatars
+            - var check=null; if (image.url == user.avatar) check='checked';
+            - var avatarSource = 'fa-' + image.source;
+            .form-group
+              label.pointer
+                i.bg-primary.avatar-source.fa(class=avatarSource)
+                img.img-circle(width="50px", src=image.url)
+                input.form-controller.hidden(type="radio", name="avatar", value=image.url, checked=check)
+        button.btn.btn-default(type="submit") Submit

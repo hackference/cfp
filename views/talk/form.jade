@@ -1,0 +1,23 @@
+extends ../layout
+
+block content
+  .row
+    .col-md-8.col-md-offset-2
+      form(method="post")
+        .form-group
+          label(for="talk-title") Title
+          input.form-control#talk-title(type="text", name="title", placeholder="Talk Title", required, value=talk.title)
+        .form-group
+          label(for="talk-abstract") Abstract
+          textarea.form-control#talk-abstract(name="abstract", placeholder="Talk Abstract", required) #{talk.abstract}
+        .form-group
+          label(for="talk-type") Type
+          select.form-control#talk-type(name="type", required)
+            option(value="") Please Select
+            for type in talkTypes
+              - var select=null; if (type.value == talk.type) select='selected';
+              option(value=type.value, selected=select)= type.name
+        .form-group
+          label(for="talk-extra") Additional Info (Not shown during voting)
+          textarea.form-control#talk-extra(name="extra", placeholder="Additional Info") #{talk.extra}
+        button.btn.btn-default(type="submit") Submit
