@@ -20,4 +20,10 @@ block content
         .form-group
           label(for="talk-extra") Additional Info (Not shown during voting)
           textarea.form-control#talk-extra(name="extra", placeholder="Additional Info") #{talk.extra}
+        .form-group
+          label(for="talk-coc")
+            input#talk-coc(type="checkbox", name="coc", value="true", required)
+            |  Do you agree to our 
+            a(href="http://2015.hackference.co.uk/code-of-conduct.html")  Code of Conduct
+            | ?
         button.btn.btn-default(type="submit") Submit
