@@ -20,7 +20,7 @@ router.get('/logout', function(req, res) {
 
 /* GET contact page. */
 router.get('/contact', function(req, res) {
-  res.render('contact', { title: 'CFP' });
+  res.render('contact', { title: 'Contact Us About Hackference' });
 });
 
 module.exports = router;
