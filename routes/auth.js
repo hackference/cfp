@@ -42,47 +42,91 @@ passport.use(new GitHubStrategy({
     // asynchronous verification, for effect...
     process.nextTick(function() {
 
-      var options = {
-        key: profile._json.email,
-        include_docs: true
-      };
-      user.view('user', 'byemail', options, function(err, data) {
-        if (err) return false;
+      if (profile._json.email) {
+        var options = {
+          key: profile._json.email,
+          include_docs: true
+        };
+        user.view('user', 'byemail', options, function(err, data) {
+          if (err) return false;
 
-        // Create user if doesn't exist
-        if (!data.rows.length) {
-          var doc = {
-            name: profile._json.name,
-            email: profile._json.email,
-            avatar: profile._json.avatar_url,
-            url: profile._json.blog,
-            github: profile._json.login,
-            company: profile._json.company,
-            auth: {
-              github : profile._json
+          // Create user if doesn't exist
+          if (!data.rows.length) {
+            var doc = {
+              name: profile._json.name,
+              email: profile._json.email,
+              avatar: profile._json.avatar_url,
+              url: profile._json.blog,
+              github: profile._json.login,
+              company: profile._json.company,
+              auth: {
+                github : profile._json
+              }
             }
+            user.insert(doc, function(err, userdata) {
+              user.get(userdata.id, function(err, body) {
+                return done(null, cleanUpUserObject(body));
+              });
+            })
+          } else {
+            var userdoc = data.rows[0].doc;
+            userdoc.id = userdoc._id;
+            userdoc.github = userdoc.github || profile._json.login;
+            userdoc.company = userdoc.company || profile._json.company;
+
+            // Update the auth data
+            if (!('auth' in userdoc)) userdoc.auth = {}
+            if (!('github' in userdoc.auth)) userdoc.auth.github = {}
+            userdoc.auth.github = profile._json
+            user.insert(userdoc, userdoc._id)
+
+            return done(null, cleanUpUserObject(userdoc));
           }
-          user.insert(doc, function(err, userdata) {
-            user.get(userdata.id, function(err, body) {
-              return done(null, cleanUpUserObject(body));
-            });
-          })
-        } else {
-          var userdoc = data.rows[0].doc;
-          userdoc.id = userdoc._id;
-          userdoc.github = userdoc.github || profile._json.login;
-          userdoc.company = userdoc.company || profile._json.company;
 
-          // Update the auth data
-          if (!('auth' in userdoc)) userdoc.auth = {}
-          if (!('github' in userdoc.auth)) userdoc.auth.github = {}
-          userdoc.auth.github = profile._json
-          user.insert(userdoc, userdoc._id)
+        });
+      } else {
+        var options = {
+          key: ['github',profile._json.id],
+          include_docs: true
+        };
+        user.view('user', 'byauth', options, function(err, data) {
+          if (err) return false;
 
-          return done(null, cleanUpUserObject(userdoc));
-        }
+          // Create user if doesn't exist
+          if (!data.rows.length) {
+            var doc = {
+              name: profile._json.name,
+              email: profile._json.email,
+              avatar: profile._json.avatar_url,
+              url: profile._json.blog,
+              github: profile._json.login,
+              company: profile._json.company,
+              auth: {
+                github : profile._json
+              }
+            }
+            user.insert(doc, function(err, userdata) {
+              user.get(userdata.id, function(err, body) {
+                return done(null, cleanUpUserObject(body));
+              });
+            })
+          } else {
+            var userdoc = data.rows[0].doc;
+            userdoc.id = userdoc._id;
+            userdoc.github = userdoc.github || profile._json.login;
+            userdoc.company = userdoc.company || profile._json.company;
 
-      });
+            // Update the auth data
+            if (!('auth' in userdoc)) userdoc.auth = {}
+            if (!('github' in userdoc.auth)) userdoc.auth.github = {}
+            userdoc.auth.github = profile._json
+            user.insert(userdoc, userdoc._id)
+
+            return done(null, cleanUpUserObject(userdoc));
+          }
+
+        });
+      }
     });
   }
 
