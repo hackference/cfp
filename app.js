@@ -87,6 +87,19 @@ app.use(function(req, res, next) {
   });
 });
 
+// Check the user is valid, if not…force relogin
+app.use(function(req, res, next) {
+  if (req.user) {
+    if (!req.user.id) {
+      res.redirect('/logout');
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
+
 // Implement routes
 app.use('/', routes);
 app.use('/auth', auth);
