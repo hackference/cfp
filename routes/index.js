@@ -4,7 +4,11 @@ var utils   = require(__dirname + '/../lib/utils');
 
 /* GET home page. */
 router.get('/', function(req, res) {
-  res.render('index', { title: 'CFP' });
+  var completeProfile = false;
+  if (req.user) {
+    completeProfile = utils.userProfileComplete(req.user);
+  }
+  res.render('index', { title: 'CFP', completeProfile: completeProfile });
 });
 
 /* GET login page. */

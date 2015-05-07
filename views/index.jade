@@ -3,9 +3,17 @@ extends layout
 block content
   .row
     .col-md-12
-      h1= title
-      p Welcome to #{title}
+      p Welcome, you can submit Call for papers here for Hackference. If you've got any questions, please ask, you can find the details on the
+        a(href="/contact")  contact
+        |  page
   if !loggedIn
     include includes/login
   else
-      p why not submit a talk
+    if !completeProfile
+      .row
+        .col-md-12
+          p.bg-warning Please complete your
+            a(href="/user")  profile
+            |  to submit a talk
+        
+      
