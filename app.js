@@ -18,6 +18,7 @@ var cookieParser  = require('cookie-parser');
 var bodyParser    = require('body-parser');
 var cookieSession = require('cookie-session');
 var passport      = require('passport');
+var flash         = require('connect-flash');
 var utils         = require('./lib/utils');
 
 // Libs
@@ -42,6 +43,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser(config.session.secret));
 app.use(cookieSession({secret: config.session.secret}));
+app.use(flash());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(passport.initialize());
