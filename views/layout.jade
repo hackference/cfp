@@ -47,6 +47,11 @@ html(lang='en')
               li
                 a(href="/login") Login
     .container-fluid
+      if generalMessages.length > 0
+        .row
+          .col-md-12
+            for message in generalMessages
+              p.bg-info= message
       block content
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js')
     script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js")

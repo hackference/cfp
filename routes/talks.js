@@ -61,6 +61,7 @@ var updateTalk = function(req, res) {
 
             talkDb.insert(body, talkId, function(err, body) {
               if (!err) {
+                req.flash('general', 'Thank you for submitting a talk.');
                 res.redirect('/talk/' + body.id);
               } else {
                 console.log(err);
@@ -68,9 +69,11 @@ var updateTalk = function(req, res) {
               }
             });
           } else {
+            req.flash('general', 'Thank you for submitting a talk.');
             res.redirect('/talk/' + body.id);
           }
         } else {
+          req.flash('general', 'Thank you for submitting a talk.');
           res.redirect('/talk/' + body.id);
         }
       } else {
@@ -80,6 +83,7 @@ var updateTalk = function(req, res) {
   } else {
     talkDb.insert(doc, function(err, body) {
       if (!err) {
+        req.flash('general', 'Thank you for submitting a talk.');
         res.redirect('/talk/' + body.id);
       } else {
         res.render('talk/form', { talkTypes: talkTypes, talk: talk });
@@ -93,6 +97,7 @@ var updateTalk = function(req, res) {
 router.get('/new', function(req, res) {
   // Only allow
   if (!utils.userProfileComplete(req.user)) {
+    req.flash('general', 'Please complete your profile to submit a talk');
     res.redirect('/user');
   } else {
     res.render('talk/form', { title: 'New Talk', talkTypes: talkTypes, talk: {} });

@@ -67,6 +67,9 @@ app.use(function(req, res, next) {
     options.user = req.user;
     options.loggedIn = req.loggedIn;
 
+    // If flash messages thrown
+    options.generalMessages = req.flash('general');
+
     options.offline = false;
     if (app.get('env') === 'development') {
       options.offline = true;
