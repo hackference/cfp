@@ -154,9 +154,17 @@ router.get('/:id', function(req, res) {
       if (body.type != 'talk') {
         res.redirect('/talk');
       } else {
+        // Which page to Display
+        var displayPage = 'talk/profile';
+        if(req.cfpSettings.admins.indexOf(req.user.id) < 0) {
+          displayPage += '-voter';
+        }
+        else if (req.cfpSettings.voters.indexOf(req.user.id) < 0) {
+          displayPage += '-admin';
 
+        }
         // Display the event data
-        res.render('talk/profile', { title: body.talk.title, talk: body });
+        res.render(displayPage, { title: body.talk.title, talk: body });
       }
     }
   });

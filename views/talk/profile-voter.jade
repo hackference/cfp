@@ -1,0 +1,16 @@
+extends ../layout
+
+block content
+  .row
+    .col-md-6
+      h1.text-left #{talk.talk.title}
+      if talk.user.id == user.id
+        a.btn.btn-default(href='/talk/#{talk._id}/edit')
+            i.fa.fa-edit
+      p #{talk.talk.abstract}
+  .row
+    .col-md-12
+      h2.text-left User Details
+  .row
+    .col-md-10
+      p Experience: #{talk.user.experience}

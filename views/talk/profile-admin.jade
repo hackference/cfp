@@ -1,0 +1,35 @@
+extends ../layout
+
+block content
+  .row
+    .col-md-6
+      h1.text-left #{talk.talk.title}
+      if talk.user.id == user.id
+        a.btn.btn-default(href='/talk/#{talk._id}/edit')
+            i.fa.fa-edit
+      p #{talk.talk.abstract}
+      if talk.talk.extra
+        h3 More Info
+        p #{talk.talk.extra}
+  .row
+    .col-md-12
+      h2.text-left User Details
+  .row
+    .col-md-2
+      img.img-circle(width="100px", src=talk.user.avatar)
+    .col-md-10
+      p Name: #{talk.user.name}
+      p Position: #{talk.user.position}
+      p Company: #{talk.user.company}
+      p Experience: #{talk.user.experience}
+      p E-mail: 
+        a(href="mailto:"+talk.user.email) #{talk.user.email}
+      if talk.user.url
+        p Web: 
+          a(href=talk.user.url) #{talk.user.url}
+      if talk.user.github
+        p GitHub: 
+          a(href="https://github.com/"+talk.user.github) #{talk.user.github}
+      if talk.user.twitter
+        p Twitter: 
+          a(href="https://twitter.com/"+talk.user.twitter) #{talk.user.twitter}
