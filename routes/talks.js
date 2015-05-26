@@ -156,7 +156,7 @@ router.get('/:id', function(req, res) {
       } else {
 
         // Display the event data
-        res.render('talk/profile', { title: body.title, talk: body });
+        res.render('talk/profile', { title: body.talk.title, talk: body });
       }
     }
   });
@@ -176,12 +176,6 @@ router.get('/', function(req, res) {
     include_docs: true
   };
 
-  // If you aren't an admin or a voter, limit to your CFPs
-  // if (req.cfpSettings.admins.indexOf(userId) < 0 &&
-  // req.cfpSettings.voters.indexOf(userId) < 0) {
-  //   options.key = userId;
-  //   title += ' you have submitted';
-  // }
   if (utils.viewAllSubmissions(userId, req.cfpSettings)) {
     options.key = userId;
     title += ' you have submitted';

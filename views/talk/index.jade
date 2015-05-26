@@ -17,5 +17,6 @@ block content
             p #{talk.doc.talk.abstract}
           .col-md-4 
             p #{talk.doc.talk.type}
-            a.btn.btn-default(href='/talk/#{talk.id}/edit')
-              i.fa.fa-edit
+            if talk.doc.user.id == user.id
+              a.btn.btn-default(href='/talk/#{talk.id}/edit')
+                i.fa.fa-edit
