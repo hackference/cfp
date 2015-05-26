@@ -26,7 +26,7 @@ block content
         a(href="mailto:"+talk.user.email) #{talk.user.email}
       if talk.user.url
         p Web: 
-          a(href=talk.user.url) #{talk.user.url}
+          a(href=talk.user.url, target="_blank") #{talk.user.url}
       if talk.user.github
         p GitHub: 
           a(href="https://github.com/"+talk.user.github) #{talk.user.github}
