@@ -2,11 +2,13 @@ extends ../layout
 
 block content
   .row
-    .col-md-12
+    .col-md-10
       h1=title
       a.btn.btn-default(href='/talk/new') 
         i.fa.fa-edit
         |  New Talk
+    .col-md-2
+      p Talks ##{submissions.length}
   .row
     .col-md-8.col-md-offset-2
       for talk in submissions
