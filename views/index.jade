@@ -3,7 +3,8 @@ extends layout
 block content
   .row
     .col-md-12
-      p Welcome, you can submit Call for papers here for Hackference. If you've got any questions, please ask, you can find the details on the
+      h1 Welcome, you can submit Call for papers here for Hackference. 
+      p If you've got any questions, please ask, you can find the details on the
         a(href="/contact")  contact
         |  page
   if !loggedIn
@@ -15,5 +16,13 @@ block content
           p.bg-warning Please complete your
             a(href="/user")  profile
             |  to submit a talk
+  .row
+    .col-md-12
+      p We want to create an amazing event, bringing the best speakers that fit Hackference to our fantastic audience.
+      p So, to make things fair we're doing two rounds of voting. The first round of voting is blind so that all sessions are picked purely on the merit of the subject and abstract.
+      p We then will be doing a second round to make sure things are fair, such as we don't have too much JavaScript or too little diversity among our speaker submissions.
+      p With this, we encourage everyone to submit multiple talks for th ebest chance of speaking.
+      p In exchange for you talking we will be covering accommodation for the course of the conference, and hopefully the hackathon for those that wish to attend it as well.
+      | We will also be covering reasonable transport costs, due to this being a community event that isn't run for profit we do have a budget for transport that we must adhere to if we wish the event to go forward.
         
       
