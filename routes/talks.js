@@ -95,6 +95,12 @@ var updateTalk = function(req, res) {
 
 /* GET talk new */
 router.get('/new', function(req, res) {
+  // Stop submissions after X date
+  if (new Date(req.cfpSettings.submissionDate) < new Date()) {
+    req.flash('general', 'Sorry, but submissions to the Call for Papers is now closed.');
+    res.redirect('/talk');
+  }
+
   // Only allow
   if (!utils.userProfileComplete(req.user)) {
     req.flash('general', 'Please complete your profile to submit a talk');
@@ -111,6 +117,12 @@ router.post('/new', updateTalk);
 /* GET talk edit */
 router.get('/:id/edit', function(req, res) {
 
+  // Stop submissions after X date
+  if (new Date(req.cfpSettings.submissionDate) < new Date()) {
+    req.flash('general', 'Sorry, but submissions to the Call for Papers is now closed.');
+    res.redirect('/talk');
+  }
+
   // The Talk ID
   var talkId = req.param('id');
 
@@ -123,6 +135,7 @@ router.get('/:id/edit', function(req, res) {
 
       // If it's not a talk
       if (body.type != 'talk') {
+        req.flash('general', 'This is not your talk.');
         res.redirect('/talk');
       } else {
 
