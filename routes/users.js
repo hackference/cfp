@@ -92,8 +92,6 @@ router.get('/:id', function(req, res) {
   // Get the talk doc
   user.get(userId, function(err, userdata) {
 
-    var userId = userdata.id;
-
     // View options
     var options = {
       include_docs: true,
@@ -102,7 +100,7 @@ router.get('/:id', function(req, res) {
     // Grab the talks
     talkDb.view('user', 'byid', options, function(err, talkdata) {
 
-      res.render('user/profile-admin', { title:userdata.name, user: userdata, talks: talkdata.rows})
+      res.render('user/profile-admin', { title: userdata.name, profileuser: userdata, talks: (talkdata.rows)?talkdata.rows:{}})
 
     });
 
