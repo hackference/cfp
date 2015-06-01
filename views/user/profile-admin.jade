@@ -1,0 +1,40 @@
+extends ../layout
+
+block content
+  .row
+    .col-md-12
+      h1 #{user.name}
+  .row
+    .col-md-2
+      img.img-circle(width="100px", src=user.avatar)
+    .col-md-10
+      p Position: #{user.position}
+      p Company: #{user.company}
+      p Experience: #{user.experience}
+      p E-mail: 
+        a(href="mailto:"+user.email) #{user.email}
+      if user.url
+        p Web: 
+          a(href=user.url, target="_blank") #{user.url}
+      if user.github
+        p GitHub: 
+          a(href="https://github.com/"+user.github) #{user.github}
+      if user.twitter
+        p Twitter: 
+          a(href="https://twitter.com/"+user.twitter) #{user.twitter}
+      p Bio
+      div #{user.bio}
+  .row
+    .col-md-12
+      h2 Talks
+      table.table.table-hover.table-bordered
+        thead
+          tr
+            th Title
+            th Type
+        tbody
+          for talk in talks
+            tr
+              td 
+                a(href="/talk/"+talk.doc.id) #{talk.doc.talk.title}
+              td #{talk.doc.type}

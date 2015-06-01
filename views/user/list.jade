@@ -1,0 +1,30 @@
+extends ../layout
+
+block content
+  .row
+    .col-md-8.col-md-offset-2
+      p You have #{users.length} signed up
+      table.table.table-hover.table-bordered
+        thead
+          tr
+            th Name
+            th E-mail
+            th Company
+            th Position
+            th
+              i.fa.fa-twitter
+            th
+              i.fa.fa-github
+            th
+        tbody
+          for user in users
+            tr
+              td 
+                a(href="/user/"+user.id) #{user.doc.name}
+              td #{user.doc.email}
+              td #{user.doc.company}
+              td #{user.doc.position}
+              td #{user.doc.twitter}
+              td #{user.doc.github}
+              td 
+                img.img-circle(src=user.doc.avatar, width="20px")
