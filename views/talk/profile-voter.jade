@@ -2,12 +2,18 @@ extends ../layout
 
 block content
   .row
-    .col-md-6
+    .col-md-9
       h1.text-left #{talk.talk.title}
-      if talk.user.id == user.id
-        a.btn.btn-default(href='/talk/#{talk._id}/edit')
-            i.fa.fa-edit
       p #{talk.talk.abstract}
+    .col-md-3
+      ul
+        li
+          a.btn.btn-default(href='/talk/#{talk._id}/vote')
+            if !vote
+              i.fa.fa-plus-square-o
+            else
+              i.fa.fa-minus-square-o
+            |  Vote
   .row
     .col-md-12
       h2.text-left User Details

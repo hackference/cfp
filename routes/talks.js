@@ -155,6 +155,9 @@ router.get('/:id', function(req, res) {
   // The Talk ID
   var talkId = req.param('id');
 
+  // Force vote to false
+  var vote = false;
+
   // Get the talk doc
   talkDb.get(talkId, function(err, body) {
 
@@ -167,20 +170,68 @@ router.get('/:id', function(req, res) {
       if (body.type != 'talk') {
         res.redirect('/talk');
       } else {
+        // Provide default
+        if (!body.vote) {
+          body.vote = [];
+        }
+
         // Which page to Display
         var displayPage = 'talk/profile';
-        if(req.cfpSettings.admins.indexOf(req.user.id) < 0) {
-          displayPage += '-voter';
-        }
-        else if (req.cfpSettings.voters.indexOf(req.user.id) < 0) {
+        if(req.cfpSettings.admins.indexOf(req.user.id) >= 0) {
+          vote = body.vote;
           displayPage += '-admin';
+        }
+        else if (req.cfpSettings.voters.indexOf(req.user.id) >= 0) {
+          vote = (body.vote.indexOf(req.user.id) >= 0)?true:false;
+          displayPage += '-voter';
 
         }
         // Display the event data
-        res.render(displayPage, { title: body.talk.title, talk: body });
+        res.render(displayPage, { title: body.talk.title, talk: body, vote: vote });
       }
     }
   });
+});
+
+/* GET talk vote */
+router.get('/:id/vote', function(req, res) {
+
+  // The Talk ID
+  var talkId = req.param('id');
+
+  if (req.cfpSettings.voters.indexOf(req.user.id) >= 0) {
+
+    talkDb.get(talkId, function(err, body) {
+      // Only allow the creator to edit
+      if (body.user.id != req.user.id) {
+        if (!body.vote) {
+          body.vote = [];
+        }
+
+        if (body.vote.indexOf(req.user.id) < 0){
+          body.vote.push(req.user.id);
+        } else {
+          delete body.vote[body.vote.indexOf(req.user.id)];
+        }
+
+        talkDb.insert(body, talkId, function(err, body) {
+          if (!err) {
+            req.flash('general', 'Thank you for your vote.');
+          } else {
+            console.log(err);
+              req.flash('general', 'A problem occured whilst adding your vote, please try again.');
+          }
+        });
+      } else {
+        req.flash('general', 'You can\'t vote on this talk.');
+      }
+    });
+
+  } else {
+    req.flash('general', 'You can\'t vote on this talk.');
+  }
+
+  res.redirect('/talk/' + talkId);
 });
 
 /* GET talks listing. */

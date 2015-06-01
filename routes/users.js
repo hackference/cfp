@@ -68,4 +68,8 @@ router.post('/', function(req, res) {
   // res.render('user/profile', { title: 'Your speaker profile', user: req.user, possibleAvatars: {} })
 });
 
+router.get('/list', utils.ensureAdmin, function(req, res) {
+  res.send('{fuck:you}');
+});
+
 module.exports = router;
