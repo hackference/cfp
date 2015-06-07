@@ -189,7 +189,7 @@ router.get('/:id', function(req, res) {
         }
 
         // Fix the new line
-        body.talk.talk.abstract = nl2br(body.talk.talk.abstract);
+        body.talk.abstract = nl2br(body.talk.abstract);
 
         // Display the event data
         res.render(displayPage, { title: body.talk.title, talk: body, vote: vote });
