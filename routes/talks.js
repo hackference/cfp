@@ -4,7 +4,7 @@ var talkDb  = require(__dirname + '/../lib/talk')(config.eventDB);
 var utils   = require(__dirname + '/../lib/utils');
 var router  = express.Router();
 var _       = require('lodash');
-var nl2br   = require('nl2br');
+var marked  = require('marked');
 
 // Talk Types
 var talkTypes = [
@@ -189,7 +189,7 @@ router.get('/:id', function(req, res) {
         }
 
         // Fix the new line
-        body.talk.abstract = nl2br(body.talk.abstract);
+        body.talk.abstract = marked(body.talk.abstract);
 
         // Display the event data
         res.render(displayPage, { title: body.talk.title, talk: body, vote: vote });
