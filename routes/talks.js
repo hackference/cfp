@@ -4,6 +4,7 @@ var talkDb  = require(__dirname + '/../lib/talk')(config.eventDB);
 var utils   = require(__dirname + '/../lib/utils');
 var router  = express.Router();
 var _       = require('lodash');
+var nl2br   = require('nl2br');
 
 // Talk Types
 var talkTypes = [
@@ -177,15 +178,19 @@ router.get('/:id', function(req, res) {
 
         // Which page to Display
         var displayPage = 'talk/profile';
-        if(req.cfpSettings.admins.indexOf(req.user.id) >= 0) {
+        if (req.cfpSettings.admins.indexOf(req.user.id) >= 0) {
           vote = body.vote;
           displayPage += '-admin';
         }
         else if (req.cfpSettings.voters.indexOf(req.user.id) >= 0) {
-          vote = (body.vote.indexOf(req.user.id) >= 0)?true:false;
+          vote = (body.vote.indexOf(req.user.id) >= 0) ? true : false;
           displayPage += '-voter';
 
         }
+
+        // Fix the new line
+        body.talk.talk.abstract = nl2br(body.talk.talk.abstract);
+
         // Display the event data
         res.render(displayPage, { title: body.talk.title, talk: body, vote: vote });
       }
@@ -208,7 +213,7 @@ router.get('/:id/vote', function(req, res) {
           body.vote = [];
         }
 
-        if (body.vote.indexOf(req.user.id) < 0){
+        if (body.vote.indexOf(req.user.id) < 0) {
           body.vote.push(req.user.id);
         } else {
           delete body.vote[body.vote.indexOf(req.user.id)];
@@ -219,7 +224,7 @@ router.get('/:id/vote', function(req, res) {
             req.flash('general', 'Thank you for your vote.');
           } else {
             console.log(err);
-              req.flash('general', 'A problem occured whilst adding your vote, please try again.');
+            req.flash('general', 'A problem occured whilst adding your vote, please try again.');
           }
         });
       } else {

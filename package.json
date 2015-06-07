@@ -19,6 +19,7 @@
     "lodash": "^3.7.0",
     "morgan": "~1.5.1",
     "nano": "^6.1.2",
+    "nl2br": "0.0.3",
     "passport": "^0.2.1",
     "passport-bitbucket": "^0.1.2",
     "passport-github": "^0.1.5",
