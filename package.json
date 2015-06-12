@@ -25,6 +25,7 @@
     "passport-bitbucket": "^0.1.2",
     "passport-github": "^0.1.5",
     "passport-google-oauth": "^0.2.0",
+    "passport-local": "^1.0.0",
     "serve-favicon": "~2.2.0"
   }
 }

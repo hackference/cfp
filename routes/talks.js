@@ -200,28 +200,54 @@ router.get('/:id/vote', function(req, res) {
   // The Talk ID
   var talkId = req.param('id');
 
+  // Only a voter may vote
   if (req.cfpSettings.voters.indexOf(req.user.id) >= 0) {
 
+    var userId = req.user.id;
+
     talkDb.get(talkId, function(err, body) {
-      // Only allow the creator to edit
-      if (body.user.id != req.user.id) {
+      // The creator cannot vote on his own talk
+      if (body.user.id != userId) {
         if (!body.vote) {
           body.vote = [];
         }
 
-        if (body.vote.indexOf(req.user.id) < 0) {
-          body.vote.push(req.user.id);
+        // Add users vote, unless user has cast vote then remove
+        if (body.vote.indexOf(userId) < 0) {
+          body.vote.push(userId);
         } else {
-          delete body.vote[body.vote.indexOf(req.user.id)];
+          body.vote.splice(body.vote.indexOf(userId));
         }
 
-        talkDb.insert(body, talkId, function(err, body) {
+        // View options
+        var options = {
+          key: [userId, body.talk.type]
+        };
+        // Grab the talks
+        talkDb.view('votes', 'byuser', options, function(err, votedata) {
+
+          console.log(votedata.rows[0].value);
+
           if (!err) {
-            req.flash('general', 'Thank you for your vote.');
+            console.log(body.talk.type);
+            if (votedata.rows[0].value.count >= req.cfpSettings.voteSplit[body.talk.type]) {
+              req.flash('general', 'You have given maximum votes for this talk type.');
+            } else {
+              // Update vote
+              talkDb.insert(body, talkId, function(err, body) {
+                if (!err) {
+                  req.flash('general', 'Thank you for your vote.');
+                } else {
+                  console.log(err);
+                  req.flash('general', 'A problem occured whilst adding your vote, please try again.');
+                }
+              });
+            }
           } else {
             console.log(err);
             req.flash('general', 'A problem occured whilst adding your vote, please try again.');
           }
+
         });
       } else {
         req.flash('general', 'You can\'t vote on this talk.');

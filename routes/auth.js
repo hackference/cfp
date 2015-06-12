@@ -2,6 +2,7 @@ var express           = require('express');
 var config            = require(__dirname + '/../config.js');
 var router            = express.Router();
 var passport          = require('passport');
+var LocalStrategy     = require('passport-local');
 var GitHubStrategy    = require('passport-github').Strategy;
 var BitbucketStrategy = require('passport-bitbucket').Strategy;
 var GoogleStrategy    = require('passport-google-oauth').OAuth2Strategy;
@@ -234,5 +235,30 @@ router.get('/google/callback',
 //   function(req, res) {
 //     res.redirect('/');
 // });
+
+/* Hack so this will work on a place */
+if (process.env.NODE_ENV === 'development') {
+  passport.use(new LocalStrategy(
+    function(username, password, done) {
+      var email = req.param('email', false);
+      var options = {
+        key: email,
+        include_docs: true
+      };
+      user.view('user', 'byemail', options, function(err, data) {
+        if (err) return false;
+        var userdoc = data.rows[0].doc;
+        userdoc.id = userdoc._id;
+
+        return done(null, cleanUpUserObject(userdoc));
+      });
+    }
+
+  ));
+  router.get('/airplanemode/:email', passport.authenticate('local', { failureRedirect: '/login' }),
+      function(req, res) {
+        res.redirect('/');
+      });
+}
 
 module.exports = router;
