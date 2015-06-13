@@ -6,14 +6,12 @@ block content
       h1.text-left #{talk.talk.title}
       p.marked #{talk.talk.abstract}
     .col-md-3
-      ul
-        li
-          a.btn.btn-default(href='/talk/#{talk._id}/vote')
-            if !vote
-              i.fa.fa-plus-square-o
-            else
-              i.fa.fa-minus-square-o
-            |  Vote
+      a.btn.btn-default(href='/talk/#{talk._id}/vote')
+        if !vote
+          i.fa.fa-plus-square-o
+        else
+          i.fa.fa-minus-square-o
+        |  Vote
   .row
     .col-md-12
       h2.text-left User Details
