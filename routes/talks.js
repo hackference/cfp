@@ -292,7 +292,7 @@ router.get('/', function(req, res) {
       }
     }
 
-    if (utils.viewAllSubmissions(userId, req.cfpSettings)) {
+    if (!utils.viewAllSubmissions(userId, req.cfpSettings)) {
       data.rows = utils.arrayShuffle(data.rows);
     }
 
