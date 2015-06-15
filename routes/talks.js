@@ -292,6 +292,8 @@ router.get('/', function(req, res) {
       }
     }
 
+    data.rows = utils.arrayShuffle(data.rows);
+
     res.render('talk/index', { title: title, submissions: data.rows });
 
   });
