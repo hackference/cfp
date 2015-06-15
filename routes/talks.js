@@ -287,8 +287,12 @@ router.get('/', function(req, res) {
     for (i = 0; i < data.rows.length; i++) {
       for (j = 0; j < talkTypes.length; j++) {
         if (talkTypes[j].value == data.rows[i].doc.talk.type) {
-          data.rows[i].doc.talk.type = talkTypes[j].name;
+          data.rows[i].doc.talk.typeText = talkTypes[j].name;
         }
+      }
+
+      if(data.rows[i].vote){
+        data.rows[i].voted = (data.rows[i].vote.indexOf(userId) >= 0) ? true : false;
       }
     }
 
@@ -296,7 +300,7 @@ router.get('/', function(req, res) {
       data.rows = utils.arrayShuffle(data.rows);
     }
 
-    res.render('talk/index', { title: title, submissions: data.rows });
+    res.render('talk/index', { title: title, submissions: data.rows, talkTypes: talkTypes });
 
   });
 });

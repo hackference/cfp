@@ -7,18 +7,25 @@ block content
       a.btn.btn-default(href='/talk/new') 
         i.fa.fa-edit
         |  New Talk
+      p
+        for type in talkTypes
+          label.checkbox-inline
+            input.talk-type(type="checkbox", value=type.value)
+            | #{type.name}
     .col-md-2
       p Talks ##{submissions.length}
   .row
     .col-md-8.col-md-offset-2
       for talk in submissions
-        .row
+        .row(class=talk.doc.talk.type)
           .col-md-8 
             a(href='/talk/#{talk.id}')
               h3 #{talk.doc.talk.title}
             p #{talk.doc.talk.abstract}
           .col-md-4 
-            p #{talk.doc.talk.type}
+            p #{talk.doc.talk.typeText}
             if talk.doc.user.id == user.id
               a.btn.btn-default(href='/talk/#{talk.id}/edit')
                 i.fa.fa-edit
+            if talk.voted
+              i.fa.fa-checked
