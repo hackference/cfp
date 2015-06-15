@@ -18,3 +18,13 @@ block content
   .row
     .col-md-10
       p Experience: #{talk.user.experience}
+  .row
+    .col-md-12
+      h2.text-left Comment
+  .row
+    .col-md-10
+      form(method="post", action="/talk/#{talk._id}/comment")
+        .form-group
+          label(for="talk-comment") Comment
+          textarea.form-control#talk-comment(name="comment", placeholder="Talk Comment", required) #{talk.comment}
+        button.btn.btn-default(type="submit") Submit

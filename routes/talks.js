@@ -161,6 +161,8 @@ router.get('/:id', function(req, res) {
   // Get the talk doc
   talkDb.get(talkId, function(err, body) {
 
+    var userId = req.user.id;
+
     // Non-found
     if (err) {
       res.render('talk/no-profile');
@@ -177,14 +179,22 @@ router.get('/:id', function(req, res) {
 
         // Which page to Display
         var displayPage = 'talk/profile';
-        if (req.cfpSettings.admins.indexOf(req.user.id) >= 0) {
+        if (req.cfpSettings.admins.indexOf(userId) >= 0) {
           vote = body.vote;
           displayPage += '-admin';
         }
-        else if (req.cfpSettings.voters.indexOf(req.user.id) >= 0) {
-          vote = (body.vote.indexOf(req.user.id) >= 0) ? true : false;
+        else if (req.cfpSettings.voters.indexOf(userId) >= 0) {
+          vote = (body.vote.indexOf(userId) >= 0) ? true : false;
           displayPage += '-voter';
-
+          if (body.comment) {
+            for (i = 0; i < body.comment.length; i++) {
+              if (body.comment[i].user == userId) {
+                body.comment = body.comment[i].comment;
+              }
+            }
+          } else {
+            body.comment = '';
+          }
         }
 
         // Display the event data
@@ -257,6 +267,51 @@ router.get('/:id/vote', function(req, res) {
   } else {
     req.flash('general', 'You can\'t vote on this talk.');
   }
+
+  res.redirect('/talk/' + talkId);
+});
+
+/* GET talk vote */
+router.post('/:id/comment', function(req, res) {
+
+  // The Talk ID
+  var talkId = req.param('id');
+  var userId = req.user.id;
+
+  talkDb.get(talkId, function(err, body) {
+    if (err) console.log(err);
+
+    if (!body.comment) {
+      body.comment = [];
+    }
+
+    var commentFound = false;
+    for (i = 0; i < body.comment.length; i++) {
+      if (body.comment[i].user == userId) {
+        body.comment[i].comment = req.param('comment', '');
+        commentFound = true;
+      }
+    }
+
+    if (!commentFound) {
+      body.comment.push({
+        user: userId,
+        comment: req.param('comment', '')
+      });
+    }
+
+    // Update vote
+    talkDb.insert(body, talkId, function(err, body) {
+      if (!err) {
+        console.log('insert');
+        req.flash('general', 'Thank you for your comment.');
+      } else {
+        console.log(err);
+        req.flash('general', 'A problem occured whilst adding your comment, please try again.');
+      }
+    });
+
+  });
 
   res.redirect('/talk/' + talkId);
 });
