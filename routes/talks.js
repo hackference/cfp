@@ -243,11 +243,9 @@ router.get('/:id/vote', function(req, res) {
         // Grab the talks
         talkDb.view('votes', 'byuser', options, function(err, votedata) {
 
-          console.log(votedata.rows[0].value);
-
           if (!err) {
-            console.log(body.talk.type);
-            if (votedata.rows[0].value.count >= req.cfpSettings.voteSplit[body.talk.type]) {
+
+            if (votedata.rows.length > 0 && votedata.rows[0].value.count >= req.cfpSettings.voteSplit[body.talk.type]) {
               req.flash('general', 'You have given maximum votes for this talk type.');
             } else {
               // Update vote
