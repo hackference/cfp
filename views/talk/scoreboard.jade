@@ -5,18 +5,84 @@ block content
     .col-md-12
       h1 scoreboard
   .row
-    table.table.table-hover.table-bordered
-      thead
-        tr
-          th Position
-          th Title
-          th Speaker
-          th Votes
-      tbody
-        for talk in talks
-          tr
-            td #{talk.position}
-            td
-              a(href="/talk/"+talk.id) #{talk.title}
-            td #{talk.speaker}
-            td #{talk.score}
+    .col-md-12
+      ul.nav.nav-tabs(role="tablist")
+        li.active(role="presentation")
+          a(href="#home", aria-controls="all", role="tab", data-toggle="tab") All
+        li(role="presentation")
+          a(href="#conf", aria-controls="all", role="tab", data-toggle="tab") Conference
+        li(role="presentation")
+          a(href="#lightning", aria-controls="all", role="tab", data-toggle="tab") Lightning
+        li(role="presentation")
+          a(href="#workshop", aria-controls="all", role="tab", data-toggle="tab") Workshop
+  .row
+    .col-md-12
+      .tab-content
+        .tab-pane.active#home(role="tabpanel")
+          h2 All
+          table.table.table-hover.table-bordered
+            thead
+              tr
+                th Position
+                th Title
+                th Speaker
+                th Votes
+            tbody
+              for talk in talks.all
+                tr
+                  td #{talk.position}
+                  td
+                    a(href="/talk/"+talk.id) #{talk.title}
+                  td #{talk.speaker}
+                  td #{talk.score}
+        .tab-pane.active#conf(role="tabpanel")
+          h2 Conference
+          table.table.table-hover.table-bordered
+            thead
+              tr
+                th Position
+                th Title
+                th Speaker
+                th Votes
+            tbody
+              for talk in talks.conf
+                tr
+                  td #{talk.position}
+                  td
+                    a(href="/talk/"+talk.id) #{talk.title}
+                  td #{talk.speaker}
+                  td #{talk.score}
+        .tab-pane.active#lightning(role="tabpanel")
+          h2 Lightning
+          table.table.table-hover.table-bordered
+            thead
+              tr
+                th Position
+                th Title
+                th Speaker
+                th Votes
+            tbody
+              for talk in talks.lightning
+                tr
+                  td #{talk.position}
+                  td
+                    a(href="/talk/"+talk.id) #{talk.title}
+                  td #{talk.speaker}
+                  td #{talk.score}
+        .tab-pane.active#workshop(role="tabpanel")
+          h2 Workshop
+          table.table.table-hover.table-bordered
+            thead
+              tr
+                th Position
+                th Title
+                th Speaker
+                th Votes
+            tbody
+              for talk in talks.workshop
+                tr
+                  td #{talk.position}
+                  td
+                    a(href="/talk/"+talk.id) #{talk.title}
+                  td #{talk.speaker}
+                  td #{talk.score}

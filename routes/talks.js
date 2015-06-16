@@ -135,7 +135,12 @@ router.get('/scoreboard', function(req, res) {
         return a.value.count - b.value.count;
       }).reverse();
 
-      var talks = [];
+      var talks = {
+        all: [],
+        conf: [],
+        lightning: [],
+        workshop: []
+      };
 
       for (i = 0; i < talksScore.length; i++) {
         for (j = 0; j < fulltalks.rows.length; j++) {
@@ -145,11 +150,26 @@ router.get('/scoreboard', function(req, res) {
               score: talksScore[i].value.count,
               title: fulltalks.rows[j].doc.talk.title,
               id: fulltalks.rows[j].id,
-              speaker: fulltalks.rows[j].doc.user.name
+              speaker: fulltalks.rows[j].doc.user.name,
+              type: fulltalks.rows[j].doc.talk.type
             };
-            talks.push(talk);
+            talks.all.push(talk);
             break;
           }
+        }
+      }
+
+      for (i = 0; i < talks.all.length; i++) {
+        switch (talks.all[i].type) {
+          case 'talk':
+            talks.conf.push(talks.all[i]);
+            break;
+          case 'lightning':
+            talks.lightning.push(talks.all[i]);
+            break;
+          case 'workshop':
+            talks.workshop.push(talks.all[i]);
+            break;
         }
       }
 

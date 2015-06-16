@@ -18,4 +18,7 @@ $(document).ready(function() {
     }
   });
 
+  $('.nav-tabs a').tab('show');
+  $('.nav-tabs a[href="#home"]').tab('show');
+
 });
