@@ -411,8 +411,13 @@ router.get('/', function(req, res) {
         }
       }
 
-      if(data.rows[i].vote){
-        data.rows[i].voted = (data.rows[i].vote.indexOf(userId) >= 0) ? true : false;
+      if (data.rows[i].doc.vote) {
+        if (req.cfpSettings.admins.indexOf(userId) >= 0) {
+          data.rows[i].doc.voted = data.rows[i].doc.vote;
+        }
+        else if (req.cfpSettings.voters.indexOf(userId) >= 0) {
+          data.rows[i].doc.voted = (data.rows[i].doc.vote.indexOf(userId) >= 0) ? ['1'] : false;
+        }
       }
     }
 

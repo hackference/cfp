@@ -27,5 +27,7 @@ block content
             if talk.doc.user.id == user.id
               a.btn.btn-default(href='/talk/#{talk.id}/edit')
                 i.fa.fa-edit
-            if talk.voted
-              i.fa.fa-checked
+            if talk.doc.voted
+              p Vote: 
+                for vote in talk.doc.voted
+                  i.fa.fa-check-circle-o
