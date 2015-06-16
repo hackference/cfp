@@ -88,19 +88,23 @@ app.use(function(req, res, next) {
 
   req.dropnav = [];
 
-  var userId = req.user.id;
+  if (req.loggedIn) {
 
-  // Access Scoreboard
-  if ((req.cfpSettings.voters.indexOf(userId) >= 0 && new Date(req.cfpSettings.votingDate) >= new Date())
-  || req.cfpSettings.admins.indexOf(userId) >= 0) {
-    req.dropnav.push({
-      name: 'Scoreboard',
-      path: '/talk/scoreboard'
-    });
-    req.dropnav.push({
-      name: 'User List',
-      path: '/user/list'
-    });
+    var userId = req.user.id;
+
+    // Access Scoreboard
+    if ((req.cfpSettings.voters.indexOf(userId) >= 0 && new Date(req.cfpSettings.votingDate) >= new Date())
+    || req.cfpSettings.admins.indexOf(userId) >= 0) {
+      req.dropnav.push({
+        name: 'Scoreboard',
+        path: '/talk/scoreboard'
+      });
+      req.dropnav.push({
+        name: 'User List',
+        path: '/user/list'
+      });
+    }
+
   }
 
   next();

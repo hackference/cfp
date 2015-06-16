@@ -41,9 +41,10 @@ html(lang='en')
                   |  Profile
               li
                 a(href="/talk") Talks
-              for nav in dropnav
-                li
-                  a(href=nav.path) #{nav.name}
+              if dropnav.length > 0
+                for nav in dropnav
+                  li
+                    a(href=nav.path) #{nav.name}
               li
                 a(href="/logout") Logout
             else
