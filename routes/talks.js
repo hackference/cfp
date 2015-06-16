@@ -22,6 +22,13 @@ var talkTypes = [
 ]
 
 var updateTalk = function(req, res) {
+
+  // Stop submissions after X date
+  if (new Date(req.cfpSettings.submissionDate) < new Date()) {
+    req.flash('general', 'Sorry, but submissions to the Call for Papers is now closed.');
+    res.redirect('/talk');
+  }
+
   // Talk ID
   var talkId = req.param('id', false);
 
