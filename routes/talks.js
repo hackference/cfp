@@ -100,6 +100,66 @@ var updateTalk = function(req, res) {
 
 }
 
+/* GET talk scoreboard */
+router.get('/scoreboard', function(req, res) {
+
+  var userId = req.user.id;
+
+  // Stop submissions after X date
+  if ((req.cfpSettings.voters.indexOf(userId) >= 0 && new Date(req.cfpSettings.votingDate) < new Date())
+  || req.cfpSettings.admins.indexOf(userId) < 0) {
+    req.flash('general', 'Sorry, you can\'t view the scores.');
+    res.redirect('/talk');
+  }
+
+  // View options
+  var options = {
+    reduce: false,
+    include_docs: true
+  };
+
+  // Grab the talks
+  talkDb.view('votes', 'bytalk', options, function(err, fulltalks) {
+
+    // View options
+    var options = {
+      reduce: true,
+      group: true
+    };
+
+    // Grab the talks
+    talkDb.view('votes', 'bytalk', options, function(err, data) {
+      var talksScore = data.rows;
+
+      talksScore.sort(function(a, b) {
+        return a.value.count - b.value.count;
+      }).reverse();
+
+      var talks = [];
+
+      for (i = 0; i < talksScore.length; i++) {
+        for (j = 0; j < fulltalks.rows.length; j++) {
+          if (fulltalks.rows[j].key == talksScore[i].key) {
+            var talk = {
+              position: i + 1,
+              score: talksScore[i].value.count,
+              title: fulltalks.rows[j].doc.talk.title,
+              id: fulltalks.rows[j].id,
+              speaker: fulltalks.rows[j].doc.user.name
+            };
+            talks.push(talk);
+            break;
+          }
+        }
+      }
+
+      res.render('talk/scoreboard', { title: 'Final Scores', talks: talks });
+    });
+
+  });
+
+});
+
 /* GET talk new */
 router.get('/new', function(req, res) {
   // Stop submissions after X date

@@ -1,0 +1,22 @@
+extends ../layout
+
+block content
+  .row
+    .col-md-12
+      h1 scoreboard
+  .row
+    table.table.table-hover.table-bordered
+      thead
+        tr
+          th Position
+          th Title
+          th Speaker
+          th Votes
+      tbody
+        for talk in talks
+          tr
+            td #{talk.position}
+            td
+              a(href="/talk/"+talk.id) #{talk.title}
+            td #{talk.speaker}
+            td #{talk.score}
