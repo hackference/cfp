@@ -59,28 +59,6 @@ app.use(function(req, res, next) {
   next();
 });
 
-// Apply items used in all views
-app.use(function(req, res, next) {
-  var _render = res.render;
-  res.render = function(view, options, fn) {
-    if (!options) var options = {};
-    options.user = req.user;
-    options.loggedIn = req.loggedIn;
-
-    // If flash messages thrown
-    options.generalMessages = req.flash('general');
-
-    options.offline = false;
-    if (app.get('env') === 'development') {
-      options.offline = true;
-    }
-
-    _render.call(this, view, options, fn);
-  }
-
-  next();
-});
-
 // Load in any CFP settings
 app.use(function(req, res, next) {
   talkDb.get('settings', function(err, body) {
@@ -103,6 +81,52 @@ app.use(function(req, res, next) {
   } else {
     next();
   }
+});
+
+// Make the drop nav useful
+app.use(function(req, res, next) {
+
+  req.dropnav = [];
+
+  var userId = req.user.id;
+
+  // Access Scoreboard
+  if ((req.cfpSettings.voters.indexOf(userId) >= 0 && new Date(req.cfpSettings.votingDate) >= new Date())
+  || req.cfpSettings.admins.indexOf(userId) >= 0) {
+    req.dropnav.push({
+      name: 'Scoreboard',
+      path: '/talk/scoreboard'
+    });
+    req.dropnav.push({
+      name: 'User List',
+      path: '/user/list'
+    });
+  }
+
+  next();
+});
+
+// Apply items used in all views
+app.use(function(req, res, next) {
+  var _render = res.render;
+  res.render = function(view, options, fn) {
+    if (!options) var options = {};
+    options.user = req.user;
+    options.loggedIn = req.loggedIn;
+    options.dropnav = req.dropnav;
+
+    // If flash messages thrown
+    options.generalMessages = (req.flash('general')) ? req.flash('general') : [];
+
+    options.offline = false;
+    if (app.get('env') === 'development') {
+      options.offline = true;
+    }
+
+    _render.call(this, view, options, fn);
+  }
+
+  next();
 });
 
 // Implement routes
