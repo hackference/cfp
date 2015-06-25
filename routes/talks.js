@@ -142,6 +142,7 @@ router.get('/scoreboard', function(req, res) {
         workshop: []
       };
 
+      var totalVotes = 0;
       for (i = 0; i < talksScore.length; i++) {
         for (j = 0; j < fulltalks.rows.length; j++) {
           if (fulltalks.rows[j].key == talksScore[i].key) {
@@ -154,6 +155,7 @@ router.get('/scoreboard', function(req, res) {
               type: fulltalks.rows[j].doc.talk.type
             };
             talks.all.push(talk);
+            totalVotes = totalVotes + talk.score;
             break;
           }
         }
@@ -173,7 +175,7 @@ router.get('/scoreboard', function(req, res) {
         }
       }
 
-      res.render('talk/scoreboard', { title: 'Final Scores', talks: talks });
+      res.render('talk/scoreboard', { title: 'Final Scores', talks: talks, totalVotes: totalVotes });
     });
 
   });
