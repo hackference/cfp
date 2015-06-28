@@ -162,15 +162,19 @@ router.get('/scoreboard', function(req, res) {
       }
 
       for (i = 0; i < talks.all.length; i++) {
+        var talk = talks.all[i];
         switch (talks.all[i].type) {
           case 'talk':
-            talks.conf.push(talks.all[i]);
+            talk.position = talks.conf.length + 1;
+            talks.conf.push(talk);
             break;
           case 'lightning':
-            talks.lightning.push(talks.all[i]);
+            talk.position = talks.lightning.length + 1;
+            talks.lightning.push(talk);
             break;
           case 'workshop':
-            talks.workshop.push(talks.all[i]);
+            talk.position = talks.workshop.length + 1;
+            talks.workshop.push(talk);
             break;
         }
       }

@@ -23,14 +23,12 @@ block content
           table.table.table-hover.table-bordered
             thead
               tr
-                th Position
                 th Title
                 th Speaker
                 th Votes
             tbody
               for talk in talks.all
                 tr
-                  td #{talk.position}
                   td
                     a(href="/talk/"+talk.id) #{talk.title}
                   td #{talk.speaker}
